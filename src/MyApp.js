@@ -13,7 +13,7 @@ function MyApp() {
   function updateList(person) {
     makePostCall(person).then(result => {
       if (result) {
-        setCharacters([...characters, person]);
+        setCharacters([...characters, result]);
       }
     });
   }
@@ -33,7 +33,7 @@ function MyApp() {
   async function makePostCall(person){
     try {
       const response = await axios.post('http://localhost:5000/users', person);
-      return response.status === 201;
+      return response.status === 201 ? response.data : null;
     }
     catch (error) {
       console.log(error);
