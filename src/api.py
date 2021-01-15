@@ -31,14 +31,19 @@ def get_users():
         return resp, 201
 
 
-@app.route('/users/<id>')
+@app.route('/users/<id>', methods=['GET', 'DELETE'])
 def get_user(id):
     if id:
-        for user in users['users_list']:
-            if user['id'] == id:
-                return user
-        return ({})
-    return users
+        for i in range(len(users['users_list'])):
+            if users['users_list'][i]['id'] == id:
+                if request.method == 'GET':
+                    return users['user_list'][i], 200
+                if request.method == 'DELETE':
+                    users['users_list'].pop(i)
+                    return {}, 204
+
+    return (users, 200) if request.method == 'GET' else ({}, 404)
+
 
 
 def generateID():

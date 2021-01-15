@@ -7,7 +7,11 @@ function MyApp() {
   const [characters, setCharacters] = useState([]);
 
   function removeOneCharacter(index) {
-    setCharacters(characters.filter((character, i) => i !== index));
+    makeDeleteCall(characters[index]['id']).then(result => {
+      if (result) {
+        setCharacters(characters.filter((character, i) => i !== index));
+      }
+    });
   }
 
   function updateList(person) {
@@ -34,6 +38,17 @@ function MyApp() {
     try {
       const response = await axios.post('http://localhost:5000/users', person);
       return response.status === 201 ? response.data : null;
+    }
+    catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  async function makeDeleteCall(id){
+    try {
+      const response = await axios.delete(`http://localhost:5000/users/${id}`);
+      return response.status === 204;
     }
     catch (error) {
       console.log(error);
